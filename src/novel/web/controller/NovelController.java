@@ -207,8 +207,12 @@ public class NovelController {
 	 * @return
 	 */
 	
+	
+//	注意这里拿的是chapterUrl 不是novelURL 否则章节会读不出来
+	
 	/**http://localhost:8080/ssm18/novel/chapterList.do
 	 * ?url=http://www.bxwx8.la/b/5/5740/index.html&name=元尊&id=203677**/
+	
 	@RequestMapping(value = "/chapterList.do", method = RequestMethod.GET)
 	public ModelAndView showChapterList(String url, String id) {
 		System.out.println("chapterList.doyunxingle");
@@ -230,8 +234,7 @@ public class NovelController {
 		System.out.println("****************"+model1.toString());
 		
 		view.getModel().put("chapters", ChapterSpiderFactory.getChapterSpider(url).getChapters(url));
-		System.out.println("view.getModel().put(\"chapters\", "
-				+ "ChapterSpiderFactory.getChapterSpider(url).getChapters(url)); 执行成功");
+		
 		view.getModel().put("baseUrl", url);
 		return view;
 	}
@@ -245,10 +248,11 @@ public class NovelController {
 	public ModelAndView nowRead(String url, String id, String baseUrl) {
 		System.out.println("跳转马上阅读 id="+id);
 		ModelAndView view = new ModelAndView();
-		view.setViewName("3g/content/nowReadContent");
+		view.setViewName("/content/nowReadContent");
 		view.addObject("nowReadName", service.findNovelInfo(id));
 		try {
 			ChapterDetail detail = ChapterDetailSpiderFactory.getsChapterDetailSpider(url).getChapterDetail(url);
+			System.out.println("ModelAndView nowRead -----------detail="+detail.toString());
 			detail.setContent(detail.getContent().replaceAll("\n", "<br>"));
 			view.getModel().put("chapterDetail", detail);
 			view.getModel().put("isSuccess", true);
